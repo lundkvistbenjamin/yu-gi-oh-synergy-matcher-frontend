@@ -1,4 +1,4 @@
-const API_BASE = "https://yu-gi-oh-synergy-matcher-backend.vercel.app/";
+const API_BASE = "https://yu-gi-oh-synergy-matcher-backend.vercel.app";
 
 // 1. Dropdown configurations
 const TYPES = ["Effect Monster", "Normal Monster", "Spell Card", "Trap Card", "Fusion Monster", "Link Monster", "XYZ Monster", "Synchro Monster", "Synchro Tuner Monster", "Tuner Monster", "Flip Effect Monster", "Gemini Monster", "Ritual Effect Monster", "Pendulum Effect Monster", "Pendulum Effect Ritual Monster", "Pendulum Effect Fusion Monster", "Ritual Monster"];
