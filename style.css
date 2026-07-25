@@ -123,23 +123,99 @@ button:active {
 
 #result {
     margin-top: 20px;
-    padding: 15px;
+    padding-top: 15px;
     border-top: 2px dashed var(--accent);
-    text-align: center;
-    font-weight: bold;
     word-break: break-word;
+}
+
+.prediction-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.top-match {
+    background-color: rgba(80, 250, 123, 0.1);
+    border: 1px solid var(--success);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+}
+
+.top-match .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--subtext);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.top-match .archetype-title {
+    color: var(--success);
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.top-match .confidence {
+    color: var(--text);
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.sub-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sub-match-card {
+    background-color: var(--bg);
+    border: 1px solid rgba(189, 147, 249, 0.3);
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.sub-rank {
+    color: var(--keyword);
+    font-weight: bold;
+}
+
+.sub-name {
+    color: var(--text);
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.sub-conf {
+    color: var(--subtext);
+}
+
+.loading {
+    color: var(--subtext);
+    text-align: center;
 }
 
 .success {
     color: var(--success);
+    text-align: center;
+    font-weight: bold;
 }
 
 .error {
     color: var(--error);
+    text-align: center;
+    font-weight: bold;
 }
 
 .default {
     color: var(--text);
+    text-align: center;
 }
 
 @media (max-width: 600px) {

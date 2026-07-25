@@ -1,12 +1,20 @@
 const API_BASE = "https://yu-gi-oh-synergy-matcher-backend.vercel.app";
 
-// 1. Dropdown configurations
-const TYPES = ["Effect Monster", "Normal Monster", "Spell Card", "Trap Card", "Fusion Monster", "Link Monster", "XYZ Monster", "Synchro Monster", "Synchro Tuner Monster", "Tuner Monster", "Flip Effect Monster", "Gemini Monster", "Ritual Effect Monster", "Pendulum Effect Monster", "Pendulum Effect Ritual Monster", "Pendulum Effect Fusion Monster", "Ritual Monster"];
-const ALL_RACES = ["Dragon", "Warrior", "Spellcaster", "Machine", "Fiend", "Plant", "Fish", "Aqua", "Sea Serpent", "Cyberse", "Fairy", "Rock", "Reptile", "Beast", "Winged Beast", "Zombie", "Insect", "Psychic", "Pyro", "Thunder", "Beast-Warrior", "Illusion", "Wyrm", "Continuous", "Equip", "NONE"];
+// 1. Dropdown configurations (Monster cards only)
+const TYPES = [
+    "Effect Monster", "Normal Monster", "Fusion Monster", "Link Monster",
+    "XYZ Monster", "Synchro Monster", "Synchro Tuner Monster", "Tuner Monster",
+    "Flip Effect Monster", "Gemini Monster", "Ritual Effect Monster",
+    "Pendulum Effect Monster", "Pendulum Effect Ritual Monster",
+    "Pendulum Effect Fusion Monster", "Ritual Monster"
+];
+const ALL_RACES = [
+    "Dragon", "Warrior", "Spellcaster", "Machine", "Fiend", "Plant", "Fish",
+    "Aqua", "Sea Serpent", "Cyberse", "Fairy", "Rock", "Reptile", "Beast",
+    "Winged Beast", "Zombie", "Insect", "Psychic", "Pyro", "Thunder",
+    "Beast-Warrior", "Illusion", "Wyrm"
+];
 const ATTRIBUTES = ["LIGHT", "DARK", "FIRE", "WATER", "EARTH", "WIND", "NONE"];
-
-const SPELL_RACES = ["Continuous", "Equip", "NONE", "Field", "Quick-Play", "Ritual"];
-const TRAP_RACES = ["Continuous", "NONE", "Counter"];
 
 // 2. Populate dropdown utility
 const fillDropdown = (id, arr) => {
@@ -23,43 +31,17 @@ const init = () => {
     fillDropdown('attribute', ATTRIBUTES);
 };
 
-// 3. UI Rules Engine
-document.getElementById('type').addEventListener('change', (e) => {
-    const isMonster = !["Spell Card", "Trap Card"].includes(e.target.value);
-    const attrEl = document.getElementById('attribute');
-    const statInputs = document.querySelectorAll('#atk, #def, #level');
-
-    // Toggle monster-only fields cleanly
-    attrEl.disabled = !isMonster;
-    attrEl.value = isMonster ? (attrEl.value === 'NONE' ? '' : attrEl.value) : 'NONE';
-
-    statInputs.forEach(input => {
-        input.disabled = !isMonster;
-        input.required = isMonster;
-        if (!isMonster) input.value = "";
-    });
-
-    // Update race lists based on card type
-    if (e.target.value === "Spell Card") {
-        fillDropdown('race', SPELL_RACES);
-    } else if (e.target.value === "Trap Card") {
-        fillDropdown('race', TRAP_RACES);
-    } else {
-        fillDropdown('race', ALL_RACES.filter(r => !["Continuous", "Equip"].includes(r)));
-    }
-});
-
 // Helper to convert inputs to clean numbers or default to -1
 const safeParse = (val) => {
     const parsed = parseInt(val, 10);
     return isNaN(parsed) ? -1 : parsed;
 };
 
-// 4. Form Submission
+// 3. Form Submission
 document.getElementById('synergyForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const resultEl = document.getElementById('result');
-    resultEl.innerText = "Analyzing...";
+    resultEl.innerHTML = "<div class='loading'>Analyzing card statistics...</div>";
 
     // Access form elements directly by name/id
     const form = e.target;
@@ -80,14 +62,41 @@ document.getElementById('synergyForm').addEventListener('submit', async (e) => {
         });
 
         if (res.status === 429) {
-            resultEl.innerText = "Slow down, duelist! You have reached the limit of 10 analyses per minute. Please wait a bit.";
+            resultEl.innerHTML = "<div class='error'>Slow down, duelist! You have reached the limit of 10 analyses per minute. Please wait a bit.</div>";
             return;
         }
 
         const json = await res.json();
-        resultEl.innerText = res.ok ? json.prediction : `Error: ${json.detail || "Unable to classify."}`;
+
+        if (res.ok && json.top_predictions) {
+            // Render top 3 predictions with confidence scores
+            let html = `<div class='prediction-container'>`;
+            html += `<div class='top-match'>
+                        <span class='label'>Primary Match</span>
+                        <div class='archetype-title'>${json.top_predictions[0].archetype}</div>
+                        <div class='confidence'>${json.top_predictions[0].confidence}% Confidence</div>
+                     </div>`;
+
+            if (json.top_predictions.length > 1) {
+                html += `<div class='sub-matches'>`;
+                json.top_predictions.slice(1).forEach((pred, idx) => {
+                    html += `<div class='sub-match-card'>
+                                <span class='sub-rank'>#${idx + 2}</span>
+                                <span class='sub-name'>${pred.archetype}</span>
+                                <span class='sub-conf'>${pred.confidence}%</span>
+                             </div>`;
+                });
+                html += `</div>`;
+            }
+            html += `</div>`;
+            resultEl.innerHTML = html;
+        } else if (res.ok && json.prediction) {
+            resultEl.innerHTML = `<div class='success'>Predicted Archetype: ${json.prediction}</div>`;
+        } else {
+            resultEl.innerHTML = `<div class='error'>Error: ${json.detail || "Unable to classify."}</div>`;
+        }
     } catch (err) {
-        resultEl.innerText = "Error: Server unreachable.";
+        resultEl.innerHTML = "<div class='error'>Error: Server unreachable.</div>";
     }
 });
 
