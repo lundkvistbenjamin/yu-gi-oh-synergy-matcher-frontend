@@ -6,6 +6,13 @@
     --accent: #bd93f9;
     --success: #50fa7b;
     --error: #ff5555;
+    --subtext: #8892b0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 body {
@@ -14,62 +21,104 @@ body {
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
-    padding: 40px;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 16px;
 }
 
 .main-panel {
     background: var(--panel);
-    padding: 30px;
+    padding: 24px 20px;
     border-radius: 8px;
     border: 1px solid var(--accent);
     box-shadow: 0 0 20px rgba(189, 147, 249, 0.2);
     width: 100%;
     max-width: 450px;
-    margin: 40px auto;
+    margin: 0 auto;
 }
 
 h1 {
     color: var(--keyword);
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin-top: 0;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
 }
 
 .description {
     font-size: 0.85rem;
-    color: #8892b0;
+    color: var(--subtext);
     margin-bottom: 20px;
     line-height: 1.4;
     text-align: center;
-    border-bottom: 1px solid var(--panel);
-    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 16px;
 }
 
 form {
     display: grid;
-    gap: 15px;
+    gap: 12px;
 }
 
 select,
 input {
-    background: var(--bg);
+    background-color: var(--bg);
     border: 1px solid var(--accent);
     color: var(--text);
-    padding: 10px;
-    border-radius: 4px;
+    padding: 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+select:focus,
+input:focus {
+    border-color: var(--keyword);
+    box-shadow: 0 0 8px rgba(255, 121, 198, 0.4);
+}
+
+select:disabled,
+input:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: var(--subtext);
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23bd93f9' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 36px;
 }
 
 button {
     background: var(--accent);
     color: var(--bg);
     border: none;
-    padding: 12px;
+    padding: 14px;
+    font-size: 1rem;
+    font-family: inherit;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
+    border-radius: 6px;
+    margin-top: 4px;
+    transition: filter 0.2s ease, transform 0.1s ease;
 }
 
 button:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.15);
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 #result {
@@ -78,6 +127,7 @@ button:hover {
     border-top: 2px dashed var(--accent);
     text-align: center;
     font-weight: bold;
+    word-break: break-word;
 }
 
 .success {
@@ -90,4 +140,18 @@ button:hover {
 
 .default {
     color: var(--text);
+}
+
+@media (max-width: 360px) {
+    .main-panel {
+        padding: 18px 14px;
+    }
+
+    h1 {
+        font-size: 1.25rem;
+    }
+
+    .description {
+        font-size: 0.8rem;
+    }
 }
