@@ -1,72 +1,74 @@
 # Yu-Gi-Oh! Synergy Matcher Client
 
-A lightweight frontend client engineered to validate, format, and dispatch card metadata payloads to an inference engine for archetype compatibility prediction.
+**Live Demo:** https://yu-gi-oh-synergy-matcher-frontend.vercel.app/
 
-## Overview
+Yu-Gi-Oh! Synergy Matcher Client is a lightweight frontend for a machine learning-powered archetype prediction engine. Users can enter the characteristics of a Yu-Gi-Oh! monster card and receive the three most likely archetypes predicted by a Random Forest model served through a FastAPI backend.
 
-The client architecture manages user input parsing and classification workflows by:
-* Dynamically populating taxonomy parameters based on Yu-Gi-Oh! card mechanics
-* Enforcing form field state shifts dependent on card class selections
-* Sanitizing numeric inputs prior to payload assembly
-* Transmitting structured JSON requests to a hosted prediction service
+## Core Features
 
-## Live Demo
+### Interactive Prediction Interface
 
-Access the active deployment here: [Yu-Gi-Oh! Synergy Matcher Client](https://yu-gi-oh-synergy-matcher-frontend.vercel.app/)
+The application provides a simple form for entering monster card statistics, including type, race, attribute, attack, defense, and level. Submitted data is validated and transformed into a structured request for the prediction API.
 
-## Features
+### Live Machine Learning Predictions
 
-### UI State and Rules Engine
-* Contextual dropdown filtering that modifies available card sub-types based on parent categories
-* Automatic disabling and resetting of monster-specific parameters when non-monster cards are selected
-* Fallback input sanitization routines that convert missing or invalid numeric metrics to standardized sentinels
+Card statistics are sent to the backend inference service, which returns the three highest-confidence archetype predictions along with confidence scores. Results are displayed immediately without requiring a page reload.
 
-### Network and Error Management
-* Asynchronous request processing via native Fetch API implementations
-* Client-side handling for HTTP 429 rate-limiting responses to prevent service spamming
-* Fallback UI messages to handle remote host disconnects or backend runtime exceptions
+### Responsive User Experience
 
-### Visual Interface
-* Responsive control panel styled with custom CSS variables using Dracula-inspired color tokens
-* Monospaced layout design optimized for concise data input workflows
+The interface provides loading states, validation feedback, and user-friendly error messages for network failures or API rate limits, ensuring a smooth experience during prediction requests.
 
-## System Architecture
+### Lightweight Frontend
 
-The client operates within a decoupled web interaction flow:
+Built entirely with Vanilla JavaScript, HTML, and CSS, the client remains fast, dependency-free, and easy to deploy as a static application.
 
-1. **Parameter Selection (DOM Input Engine):** Collects raw card type, sub-type, numerical stats, and elemental attributes through guarded selection elements.
-2. **Validation and Transformation (JavaScript Layer):** Filters out invalid attributes, parses missing numeric inputs to default states, and structures a JSON payload.
-3. **Inference Request (Vercel Host API):** Transmits serialized requests via HTTP POST to the remote backend service for archetype classification.
+## Tech Stack
 
-## Technical Details
+### Frontend
 
-### State Management Strategy
-The client uses native DOM event listeners to handle dynamic input state updates. When a user toggles the card category between Monster and Spell/Trap inputs, the interface toggles input accessibility flags and alters sub-category selection arrays in real time without necessitating full DOM rebuilds.
+- HTML5
+- CSS3
+- Vanilla JavaScript (ES6)
 
-### Dependencies and Tech Stack
-* **Markup Language:** HTML5
-* **Styling Framework:** CSS3 (Custom Properties / Dracula Theme Palette)
-* **Scripting Engine:** JavaScript (ES6+ Vanilla API Engine)
-* **Frontend Hosting:** Vercel Static Deployment
-* **Backend Target Endpoint:** Hosted on Vercel (`yu-gi-oh-synergy-matcher-backend.vercel.app`)
+### Backend Integration
 
-## Output Interpretation
+- FastAPI Prediction API
+- Fetch API
+- JSON REST endpoints
 
-* **Analyzing Status:** Signals an active HTTP request in flight to the prediction endpoint.
-* **Archetype Match Result:** Displays the predicted deck archetype returned by the model upon a successful response.
-* **Rate Limit Exception:** Notifies the user when input submission frequency exceeds the set quota of 10 requests per minute.
-* **Server Unreachable:** Indicates transport failures or missing network connectivity.
+### Deployment
 
-## Limitations
+- Vercel
 
-* Depends directly on the availability and schema specs of the external Vercel prediction endpoint.
-* Input validation is tied to fixed array definitions maintained directly inside client-side source code.
-* Does not persist session state or previous search historical logs locally.
+## Project Structure
 
-## Security Note
+```text
+.
+├── app.js              # Frontend application logic
+├── style.css           # Application styling
+├── index.html          # Main application page
+├── README.md
+├── LICENSE
+└── .gitignore
+```
 
-API interactions run across public CORS-enabled HTTPS endpoints. Inputs are processed on the client side without local caching, and non-numerical inputs are sanitized before being serialized for network transmission.
+## Application Workflow
+
+The client follows a simple request pipeline:
+
+1. **Input Collection** – Gather the card's type, race, attribute, attack, defense, and level.
+2. **Validation** – Sanitize numerical values and construct the prediction payload.
+3. **Prediction Request** – Send the payload to the FastAPI backend.
+4. **Result Display** – Render the top three predicted archetypes with confidence percentages.
+
+## Performance & Reliability
+
+The application performs all machine learning inference on the backend, keeping the frontend lightweight and responsive. Asynchronous API requests, loading indicators, and graceful error handling provide a smooth user experience even when the prediction service is unavailable or rate-limited.
+
+## Security
+
+The client communicates with the prediction API over HTTPS and never stores user input locally. All model inference and validation occur on the backend, while the frontend simply collects input and displays prediction results.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the **LICENSE** file for more information.
