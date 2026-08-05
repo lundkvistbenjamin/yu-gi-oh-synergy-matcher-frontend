@@ -1,6 +1,8 @@
-# Yu-Gi-Oh! Synergy Matcher Client
+# Yu-Gi-Oh! Synergy Matcher Frontend
 
 **Live Demo:** https://yu-gi-oh-synergy-matcher-frontend.vercel.app/
+
+**Backend Repository:** https://github.com/lundkvistbenjamin/yu-gi-oh-synergy-matcher-backend
 
 Yu-Gi-Oh! Synergy Matcher Client is a lightweight frontend for a machine learning-powered archetype prediction engine. Users can enter the characteristics of a Yu-Gi-Oh! monster card and receive the three most likely archetypes predicted by a Random Forest model served through a FastAPI backend.
 
